@@ -12,21 +12,20 @@ class Solution {
     public ListNode partition(ListNode head, int x) {
         if (head == null || head.next == null) return head;
         else {
-            ListNode temp = head;
             ListNode start1 = new ListNode(0, null);
             ListNode start2 = new ListNode(0, null);
             ListNode end1 = start1;
             ListNode end2= start2;
-            while(temp != null) {
-                if (temp.val < x) {
-                    end1.next = temp;
+            while(head != null) {
+                if (head.val < x) {
+                    end1.next = head;
                     end1 = end1.next;
                 }
                 else {
-                    end2.next = temp;
+                    end2.next = head;
                     end2 = end2.next;
                 }
-                temp = temp.next;
+                head = head.next;
             }
             end2.next = null;
             end1.next = start2.next;
