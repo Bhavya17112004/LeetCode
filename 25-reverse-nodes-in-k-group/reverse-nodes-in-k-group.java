@@ -10,39 +10,48 @@
  */
 class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
-        ListNode curr = head, temp = head, prev = null, next = null, end = null;
-        ListNode rev = new ListNode(0, null);
-        ListNode curr2 = rev;
-        int i = 0;
-        while (curr != null) {
-            while(curr != null && i < k) {
-                if (i == 0) end = curr;
-                i++;
-                next = curr.next;
+        if (head == null || k == 1) return head;
+
+        // Dummy node to simplify edge cases
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+
+        // Initialize pointers
+        ListNode prevGroupEnd = dummy;
+
+        while (true) {
+            // Check if there are at least k nodes left
+            ListNode kth = getKthNode(prevGroupEnd, k);
+            if (kth == null) break;
+
+            ListNode groupStart = prevGroupEnd.next;
+            ListNode nextGroupStart = kth.next;
+
+            // Reverse k nodes
+            ListNode prev = kth.next;
+            ListNode curr = groupStart;
+
+            while (curr != nextGroupStart) {
+                ListNode temp = curr.next;
                 curr.next = prev;
                 prev = curr;
-                curr = next;
+                curr = temp;
             }
-            if (i == k) {
-                curr2.next = prev;
-                curr2 = end;
-                prev = null;
-                i = 0;
-            }
-            if (i != 0) {
-                curr = prev;
-                prev = null;
-                while(curr != null) {
-                    next = curr.next;
-                    curr.next = prev;
-                    prev = curr;
-                    curr = next;
-                }
-                curr2.next = prev;
-                curr2 = end;
-                prev = null;
-            }
+
+            // Connect with previous part
+            prevGroupEnd.next = kth;
+            prevGroupEnd = groupStart;
         }
-        return rev.next;
+
+        return dummy.next;
+    }
+
+    // Helper to get the k-th node from a given start
+    private ListNode getKthNode(ListNode start, int k) {
+        while (start != null && k > 0) {
+            start = start.next;
+            k--;
+        }
+        return start;
     }
 }
