@@ -1,15 +1,20 @@
 class Solution {
     public int longestPalindrome(String s) {
         int[] arr = new int[58];
-        int count = 0;
-        for (int i = 0; i < s.length(); i++) {
+        int count = 0, i = 0;
+        for (i = 0; i < s.length(); i++) {
             arr[s.charAt(i) - 'A']++;            
         }
-        boolean odd = false;
-        for (int i : arr) {
-            count += (i / 2) * 2;
-            if (i % 2 != 0) odd = true;
+        int max = 0;
+        for (i = 0; i < 58; i++) {
+            if (arr[i] % 2 != 0) {
+                if (max < arr[i]) {    
+                    count += arr[i] - 1;
+                    max = arr[i];
+                } else count += arr[i] - 1;
+            } else count += arr[i];
         }
-        return odd ? count + 1 : count;
+        if (max > 0) count++;
+        return count;
     }
 }
