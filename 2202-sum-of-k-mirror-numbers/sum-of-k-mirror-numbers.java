@@ -1,47 +1,45 @@
 class Solution {
+
+    private int[] digit = new int[100];
+
     public long kMirror(int k, int n) {
-        long sum = 0;
-        int len = 1;
-        while (n > 0) {
-            for (long x : generatePalindromes(len)) {
-                if (isKPalindrome(x, k)) {
-                    sum += x;
-                    n--;
-                    if (n == 0) break;
+        int left = 1, count = 0;
+        long ans = 0;
+        while (count < n) {
+            int right = left * 10;
+            // op = 0 indicates enumerating odd-length palindromes
+            // op = 1 indicates enumerating even-length palindromes
+            for (int op = 0; op < 2; ++op) {
+                // enumerate i'
+                for (int i = left; i < right && count < n; ++i) {
+                    long combined = i;
+                    int x = (op == 0 ? i / 10 : i);
+                    while (x > 0) {
+                        combined = combined * 10 + (x % 10);
+                        x /= 10;
+                    }
+                    if (isPalindrome(combined, k)) {
+                        ++count;
+                        ans += combined;
+                    }
                 }
             }
-            len++;
+            left = right;
         }
-        return sum;
+        return ans;
     }
 
-    // Generate palindromes of given length
-    private List<Long> generatePalindromes(int len) {
-        List<Long> result = new ArrayList<>();
-        int halfLen = (len + 1) / 2;
-        long start = (long) Math.pow(10, halfLen - 1);
-        long end = (long) Math.pow(10, halfLen);
-        for (long i = start; i < end; i++) {
-            String firstHalf = Long.toString(i);
-            StringBuilder sb = new StringBuilder(firstHalf);
-            if (len % 2 == 1) sb.setLength(sb.length() - 1); // remove middle digit for odd
-            String full = firstHalf + sb.reverse();
-            result.add(Long.parseLong(full));
+    private boolean isPalindrome(long x, int k) {
+        int length = -1;
+        while (x > 0) {
+            ++length;
+            digit[length] = (int) (x % k);
+            x /= k;
         }
-        return result;
-    }
-
-    // Check if number is a palindrome in base-k
-    private boolean isKPalindrome(long num, int k) {
-        List<Integer> digits = new ArrayList<>();
-        while (num > 0) {
-            digits.add((int)(num % k));
-            num /= k;
-        }
-        int i = 0, j = digits.size() - 1;
-        while (i < j) {
-            if (!digits.get(i).equals(digits.get(j))) return false;
-            i++; j--;
+        for (int i = 0, j = length; i < j; ++i, --j) {
+            if (digit[i] != digit[j]) {
+                return false;
+            }
         }
         return true;
     }
