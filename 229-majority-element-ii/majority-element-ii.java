@@ -2,13 +2,13 @@ class Solution {
     public List<Integer> majorityElement(int[] nums) {
         int n = nums.length;
         int count1 = 0, count2 = 0;
-        Integer candidate1 = null, candidate2 = null;
+        Integer candidate1 = Integer.MIN_VALUE, candidate2 = Integer.MIN_VALUE;
 
         // 1st pass: find potential candidates
         for (int num : nums) {
-            if (candidate1 != null && num == candidate1) {
+            if (num == candidate1) {
                 count1++;
-            } else if (candidate2 != null && num == candidate2) {
+            } else if (num == candidate2) {
                 count2++;
             } else if (count1 == 0) {
                 candidate1 = num;
