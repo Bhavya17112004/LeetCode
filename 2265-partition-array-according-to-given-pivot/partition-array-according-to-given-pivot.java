@@ -3,17 +3,13 @@ class Solution {
         int n = nums.length;
         int pcount = 0;
         int[] result = new int[n];
-        int j = 0;
-        for (int i = 0; i < n; i++) {
-            if (nums[i] < pivot) result[j++] = nums[i];
-            else if (nums[i] == pivot) pcount++;
+        int left = 0, right = n - 1;
+        for (int i = 0, j = n - 1; i < n; i++, j--) {
+            if (nums[i] < pivot) result[left++] = nums[i];
+            if (nums[j] > pivot) result[right--] = nums[j];
         }
-        while(pcount > 0) {
-            result[j++] = pivot;
-            pcount--;
-        }
-        for (int i = 0; i < n; i++) {
-            if (nums[i] > pivot) result[j++] = nums[i];
+        while(left <= right) {
+            result[left++] = pivot;
         }
         return result;
     }
